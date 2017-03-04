@@ -13,10 +13,14 @@ export DEBIAN_FRONTEND=noninteractive
 
 mount /dev/sda1 /boot
 
-apt-get update
-apt-get -y dist-upgrade
+echo "raspberry" | passwd root --stdin
+
+echo "================>> test0"
+#apt-get update
+#apt-get -y dist-upgrade
 
 PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
+PKGS_TO_INSTALL="adduser postgresql-client localepurge vim iw hostapd isc-dhcp-server console-data"
 
 apt-get -y install ${PKGS_TO_INSTALL}
 
@@ -28,14 +32,17 @@ rm -rf /usr/share/doc
 # the latest pyusb from pip does not work either, usb.core.find() never returns
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
 # so we install the latest pyusb that works with this libusb
-pip install pyusb==1.0.0b1
-pip install qrcode
-pip install evdev
+#pip install pyusb==1.0.0b1
+#pip install qrcode
+#pip install evdev
 
+echo "================>> test1"
 groupadd usbusers
 usermod -a -G usbusers pi
 usermod -a -G lp pi
 
+
+echo "================>> test2"
 sudo -u postgres createuser -s pi
 mkdir /var/log/odoo
 chown pi:pi /var/log/odoo
@@ -74,8 +81,8 @@ mkdir /root_bypass_ramdisks
 
 
 echo "================>> install python modules pycountry and unidecode"
-pip install pycountry
-pip install unidecode
+#pip install pycountry
+#pip install unidecode
 echo "================>> end"
 #apt-get -y install nginx
 #mkdir /etc/nginx/ssl
@@ -86,4 +93,4 @@ echo "================>> end"
 #openssl req -new -key server.key -out server.csr
 #openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
 
-#reboot
+reboot
