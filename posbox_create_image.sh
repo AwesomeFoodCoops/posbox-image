@@ -20,6 +20,7 @@ require_command () {
 require_command kpartx
 require_command qemu-system-arm
 require_command zerofree
+require_command curl
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
@@ -36,18 +37,33 @@ fi
 cp -a *raspbian*.img posbox.img
 
 CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
-rm -rf "${CLONE_DIR}"
-mkdir "${CLONE_DIR}"
-git clone -b 8.0 --no-checkout --depth 1 https://github.com/odoo/odoo.git "${CLONE_DIR}"
-cd "${CLONE_DIR}"
-git config core.sparsecheckout true
-echo "addons/web
+#rm -rf "${CLONE_DIR}"
+if [ ! -d "${CLONE_DIR}" ]; then
+	# Control will enter here if $DIRECTORY doesn't exist.
+	mkdir -p  "${CLONE_DIR}"
+	git clone -b 8.0 --no-checkout --depth 1 https://github.com/odoo/odoo.git "${CLONE_DIR}"
+	cd "${CLONE_DIR}"
+	git config core.sparsecheckout true
+	echo "addons/web
 addons/web_kanban
 addons/hw_*
 addons/point_of_sale/tools/posbox/configuration
 openerp/
 odoo.py" | tee --append .git/info/sparse-checkout > /dev/null
-git read-tree -mu HEAD
+	git read-tree -mu HEAD
+
+fi
+
+if [ ! -d "${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons/hw_cashlogy" ]; then
+	# Control will enter here if $DIRECTORY doesn't exist.
+	wget https://github.com/shewolfParis/odoo-production/archive/9.0.zip
+        unzip 9.0.zip
+	cp -r odoo-production-9.0/extra_addons/hw_cashlogy ${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons
+	cp -r odoo-production-9.0/extra_addons/hw_telium_payment_terminal ${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons
+	rm -rf 9.0.zip
+	rm -rf odoo-production-9.0
+fi
+
 cd "${__dir}"
 
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
@@ -90,9 +106,9 @@ mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 cp -a "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
 
 # get rid of the git clone
-rm -rf "${CLONE_DIR}"
+#rm -rf "${CLONE_DIR}"
 # and the ngrok usr/bin
-rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
+#rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
 
 # get rid of the mount, we have to remount it anyway because we have
 # to "refresh" the filesystem after qemu modified it
