@@ -32,8 +32,9 @@ echo "================>> test0"
 #apt-get update
 #apt-get -y dist-upgrade
 
-PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
-PKGS_TO_INSTALL="adduser postgresql-client postgresql localepurge iw hostapd isc-dhcp-server console-data"
+PKGS_TO_INSTALL="w3m adduser postgresql-client python python-pycountry python-unidecode python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
+
+#PKGS_TO_INSTALL="adduser postgresql-client postgresql localepurge iw hostapd isc-dhcp-server console-data"
 
 apt-get -y install ${PKGS_TO_INSTALL}
 
@@ -88,13 +89,19 @@ echo "================>> install python modules pycountry and unidecode"
 #pip install pycountry
 #pip install unidecode
 echo "================>> end"
-#apt-get -y install nginx
-#mkdir /etc/nginx/ssl
-#cd /etc/nginx/ssl
-#openssl genrsa -des3 -passout pass:x -out server.pass.key 2048
-#openssl rsa -passin pass:x -in server.pass.key -out server.key
-#rm server.pass.key
-#openssl req -new -key server.key -out server.csr
-#openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
+apt-get -y install apache2
+mkdir /etc/apache2/ssl
+cd /etc/apache2/ssl
+
+openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -subj "/C=FR/ST=Denial/L=Paris/O=Dis/CN=posbox"  -keyout posbox.key  -out posbox.cert
+
+a2enmod ssl
+a2enmod rewrite
+a2enmod proxy_http
+a2enmod headers
+
+a2ensite odoo
+a2dissite 000-default.conf
+service apache2 restart
 
 #reboot
