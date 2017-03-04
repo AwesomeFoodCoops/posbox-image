@@ -30,6 +30,11 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 
+if [ -d "${MOUNT_POINT}" ]; then
+	umount "${MOUNT_POINT}"
+	rm -rf "${MOUNT_POINT}"
+fi
+
 if [ ! -f kernel-qemu ] || ! file_exists *raspbian*.img ; then
     ./posbox_download_images.sh
 fi
