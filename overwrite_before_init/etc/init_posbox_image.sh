@@ -51,10 +51,12 @@ echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 update-rc.d -f hostapd remove
 update-rc.d -f isc-dhcp-server remove
 
+echo "================>> systemctl changes"
 systemctl daemon-reload
 systemctl enable ramdisks.service
 systemctl disable dphys-swapfile.service
 
+echo "================>> setupcon changes"
 # https://www.raspberrypi.org/forums/viewtopic.php?p=79249
 # to not have "setting up console font and keymap" during boot take ages
 setupcon
@@ -64,14 +66,17 @@ create_ramdisk_dir () {
     mkdir "${1}_ram"
 }
 
+echo "================>> create ramdisk changes"
 create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
 mkdir /root_bypass_ramdisks
 
 
+echo "================>> install python modules pycountry and unidecode"
 pip install pycountry
 pip install unidecode
+echo "================>> end"
 #apt-get -y install nginx
 #mkdir /etc/nginx/ssl
 #cd /etc/nginx/ssl
@@ -81,4 +86,4 @@ pip install unidecode
 #openssl req -new -key server.key -out server.csr
 #openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
 
-reboot
+#reboot
