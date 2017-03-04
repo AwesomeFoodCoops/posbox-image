@@ -16,7 +16,7 @@ mount /dev/sda1 /boot
 apt-get update
 apt-get -y dist-upgrade
 
-PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data nginx"
+PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
 
 apt-get -y install ${PKGS_TO_INSTALL}
 
@@ -31,8 +31,6 @@ rm -rf /usr/share/doc
 pip install pyusb==1.0.0b1
 pip install qrcode
 pip install evdev
-pip install pycountry
-pip install unidecode
 
 groupadd usbusers
 usermod -a -G usbusers pi
@@ -54,29 +52,33 @@ update-rc.d -f hostapd remove
 update-rc.d -f isc-dhcp-server remove
 
 systemctl daemon-reload
-#systemctl enable ramdisks.service
-#systemctl disable dphys-swapfile.service
+systemctl enable ramdisks.service
+systemctl disable dphys-swapfile.service
 
 # https://www.raspberrypi.org/forums/viewtopic.php?p=79249
 # to not have "setting up console font and keymap" during boot take ages
 setupcon
 
-# create dirs for ramdisks
-#create_ramdisk_dir () {
-#    mkdir "${1}_ram"
-#}
+#create dirs for ramdisks
+create_ramdisk_dir () {
+    mkdir "${1}_ram"
+}
 
-#create_ramdisk_dir "/var"
-#create_ramdisk_dir "/etc"
-#create_ramdisk_dir "/tmp"
-#mkdir /root_bypass_ramdisks
+create_ramdisk_dir "/var"
+create_ramdisk_dir "/etc"
+create_ramdisk_dir "/tmp"
+mkdir /root_bypass_ramdisks
 
-mkdir /etc/nginx/ssl
-cd /etc/nginx/ssl
-openssl genrsa -des3 -passout pass:x -out server.pass.key 2048
-openssl rsa -passin pass:x -in server.pass.key -out server.key
-rm server.pass.key
-openssl req -new -key server.key -out server.csr
-openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
+
+pip install pycountry
+pip install unidecode
+#apt-get -y install nginx
+#mkdir /etc/nginx/ssl
+#cd /etc/nginx/ssl
+#openssl genrsa -des3 -passout pass:x -out server.pass.key 2048
+#openssl rsa -passin pass:x -in server.pass.key -out server.key
+#rm server.pass.key
+#openssl req -new -key server.key -out server.csr
+#openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
 
 reboot

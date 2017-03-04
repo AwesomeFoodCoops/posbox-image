@@ -67,13 +67,15 @@ fi
 cd "${__dir}"
 
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
-mkdir -p "${USR_BIN}"
-cd "/tmp"
-curl 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip' > ngrok.zip
-unzip ngrok.zip
-rm ngrok.zip
-cd "${__dir}"
-mv /tmp/ngrok "${USR_BIN}"
+if [ ! -d "${USR_BIN}" ]; then
+	mkdir -p "${USR_BIN}"
+	cd "/tmp"
+	curl 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip' > ngrok.zip
+	unzip ngrok.zip
+	rm ngrok.zip
+	cd "${__dir}"
+	mv /tmp/ngrok "${USR_BIN}"
+fi
 
 # zero pad the image to be around 3.5 GiB, by default the image is only ~1.3 GiB
 dd if=/dev/zero bs=1M count=2048 >> posbox.img
