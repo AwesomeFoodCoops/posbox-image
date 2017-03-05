@@ -131,7 +131,7 @@ fi
 qemu-system-arm "${QEMU_OPTS[@]}"
 
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
-cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
+#cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
 # cleanup
 sleep 2
@@ -139,6 +139,6 @@ umount "${MOUNT_POINT}"
 rm -r "${MOUNT_POINT}"
 
 #echo "Running zerofree..."
-#zerofree -v "${LOOP_MAPPER_PATH}" || true
+zerofree -v "${LOOP_MAPPER_PATH}" || true
 
-#kpartx -d posbox.img
+kpartx -d posbox.img
