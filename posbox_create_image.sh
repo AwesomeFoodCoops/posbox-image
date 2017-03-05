@@ -124,7 +124,7 @@ umount "${MOUNT_POINT}"
 
 # from http://paulscott.co.za/blog/full-raspberry-pi-raspbian-emulation-with-qemu/
 # ssh pi@localhost -p10022
-QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069,hostfwd=tcp::10443-:443,hostfwd=tcp::10080-:80 -net nic)
+QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069,hostfwd=tcp::10443-:443,hostfwd=tcp::10080-:80 -net nic)
 if [ -z ${DISPLAY:-} ] ; then
     QEMU_OPTS+=(-nographic)
 fi
