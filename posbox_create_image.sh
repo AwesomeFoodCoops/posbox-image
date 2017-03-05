@@ -133,7 +133,7 @@ fi
 qemu-system-arm "${QEMU_OPTS[@]}"
 
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
-#cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
+cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
 # cleanup
 sleep 2
