@@ -78,10 +78,10 @@ create_ramdisk_dir "/tmp"
 mkdir /root_bypass_ramdisks
 
 
-echo "================>> Enable ramdisk systemctl service"
+#echo "================>> Enable ramdisk systemctl service"
 systemctl daemon-reload
-systemctl enable ramdisks.service
-systemctl disable dphys-swapfile.service
+#systemctl enable ramdisks.service
+#systemctl disable dphys-swapfile.service
 
 echo "================>> Enable setupcon"
 # https://www.raspberrypi.org/forums/viewtopic.php?p=79249
