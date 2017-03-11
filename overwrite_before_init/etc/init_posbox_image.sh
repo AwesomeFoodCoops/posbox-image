@@ -23,7 +23,7 @@ echo "root:rasp" | chpasswd
 #echo "================>> Upgrade the system"
 #apt-get -y dist-upgrade
 
-PKGS_TO_INSTALL="htop w3m adduser postgresql-client python python-pycountry python-unidecode python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
+PKGS_TO_INSTALL="htop w3m adduser postgresql-client python python-unidecode python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
 
 #PKGS_TO_INSTALL="adduser postgresql-client postgresql localepurge iw hostapd isc-dhcp-server console-data"
 
@@ -38,6 +38,7 @@ rm -rf /usr/share/doc
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
 # so we install the latest pyusb that works with this libusb
 pip install pyusb==1.0.0b1
+pip install pycountry==1.20
 pip install qrcode
 pip install evdev
 pip install simplejson
@@ -73,11 +74,11 @@ create_ramdisk_dir () {
     mkdir "${1}_ram"
 }
 
-echo "================>> Create ramdisk directories"
-create_ramdisk_dir "/var"
-create_ramdisk_dir "/etc"
-create_ramdisk_dir "/tmp"
-mkdir /root_bypass_ramdisks
+#echo "================>> Create ramdisk directories"
+#create_ramdisk_dir "/var"
+#create_ramdisk_dir "/etc"
+#create_ramdisk_dir "/tmp"
+#mkdir /root_bypass_ramdisks
 
 
 #echo "================>> Enable ramdisk systemctl service"
