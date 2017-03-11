@@ -123,5 +123,6 @@ a2ensite odoo
 a2dissite 000-default.conf
 service apache2 restart
 
+chown -R pi:pi /home/pi
 echo "================>> end"
 #halt
