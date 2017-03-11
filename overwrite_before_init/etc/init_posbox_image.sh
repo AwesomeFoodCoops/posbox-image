@@ -124,5 +124,6 @@ a2dissite 000-default.conf
 service apache2 restart
 
 chown -R pi:pi /home/pi
+touch /boot/ssh
 echo "================>> end"
 #halt
