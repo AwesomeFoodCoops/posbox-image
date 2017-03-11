@@ -23,7 +23,7 @@ echo "root:rasp" | chpasswd
 #echo "================>> Upgrade the system"
 #apt-get -y dist-upgrade
 
-PKGS_TO_INSTALL="htop w3m python-simplejson python-unittest2 adduser postgresql-client python python-pycountry python-unidecode python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
+PKGS_TO_INSTALL="htop w3m adduser postgresql-client python python-pycountry python-unidecode python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
 
 #PKGS_TO_INSTALL="adduser postgresql-client postgresql localepurge iw hostapd isc-dhcp-server console-data"
 
@@ -40,6 +40,8 @@ rm -rf /usr/share/doc
 pip install pyusb==1.0.0b1
 pip install qrcode
 pip install evdev
+pip install simplejson
+pip install unittest2
 
 echo "================>> Add system user pi to usbusers system group"
 groupadd usbusers
