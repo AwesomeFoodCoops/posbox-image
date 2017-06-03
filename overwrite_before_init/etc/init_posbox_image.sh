@@ -111,7 +111,7 @@ echo "================>> Generate selfsigned certificate"
 mkdir /etc/apache2/ssl
 cd /etc/apache2/ssl
 
-openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -subj "/C=FR/ST=Denial/L=Paris/O=Dis/CN=posbox"  -keyout posbox.key  -out posbox.cert
+openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=FR/ST=Denial/L=Paris/O=Dis/CN=posbox"  -keyout posbox.key  -out posbox.cert
 
 
 echo "================>> Enable Odoo vhost"
