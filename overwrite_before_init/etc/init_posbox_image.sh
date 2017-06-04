@@ -92,18 +92,6 @@ echo "================>> Enable setupcon"
 setupcon
 
 
-### This is actually done in the previous posbox_create_image.sh script in order to accelerate the image creation (do not do it each time we run the current script)
-#echo "================>> Add hw_cashlogy and hw_telium_payment_terminal modules"
-#if [ ! -d "/home/pi/odoo/addons/hw_cashlogy" ]; then
-#        wget https://github.com/shewolfParis/odoo-production/archive/9.0.zip
-#        unzip 9.0.zip
-#        cp -r odoo-production-9.0/extra_addons/hw_cashlogy /home/pi/odoo/addons
-#        cp -r odoo-production-9.0/extra_addons/hw_telium_payment_terminal /home/pi/odoo/addons
-#        rm -rf 9.0.zip
-#        rm -rf odoo-production-9.0
-#fi
-
-
 echo "================>> Install Apache2"
 apt-get -y install apache2
 
