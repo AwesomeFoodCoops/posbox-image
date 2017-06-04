@@ -61,7 +61,7 @@ fi
 
 if [ ! -d "${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons/hw_cashlogy" ]; then
 	# Control will enter here if $DIRECTORY doesn't exist.
-	wget https://github.com/shewolfParis/odoo-production/archive/9.0.zip
+	wget https://github.com/AwesomeFoodCoops/odoo-production/archive/9.0.zip
         unzip 9.0.zip
 	cp -r odoo-production-9.0/extra_addons/hw_cashlogy ${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons
 	cp -r odoo-production-9.0/extra_addons/hw_telium_payment_terminal ${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons
