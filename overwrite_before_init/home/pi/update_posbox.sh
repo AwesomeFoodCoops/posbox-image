@@ -23,3 +23,5 @@ cp -r odoo-production-9.0/louve_addons/hw_* ${CLONE_DIR}/addons
 cp -r odoo-production-9.0/intercoop_addons/hw_* ${CLONE_DIR}/addons
 rm -rf 9.0.zip
 rm -rf odoo-production-9.0
+
+sudo reboot
