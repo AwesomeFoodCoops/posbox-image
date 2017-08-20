@@ -24,4 +24,8 @@ cp -r odoo-production-9.0/intercoop_addons/hw_* ${CLONE_DIR}/addons
 rm -rf 9.0.zip
 rm -rf odoo-production-9.0
 
+cd /home/pi/
+rm -rf update_posbox.sh
+https://raw.githubusercontent.com/AwesomeFoodCoops/posbox-image/master/overwrite_before_init/home/pi/update_posbox.sh
+
 sudo reboot
