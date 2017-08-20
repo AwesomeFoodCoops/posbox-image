@@ -11,7 +11,7 @@ cp -r odoo-9.0/addons/web ${CLONE_DIR}/addons
 cp -r odoo-9.0/addons/web_kanban ${CLONE_DIR}/addons
 cp -r odoo-9.0/addons/hw_* ${CLONE_DIR}/addons
 cp -r odoo-9.0/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons
-cp -r odoo-9.0/openerp/ ${CLONE_DIR}/
+cp -r odoo-9.0/openerp ${CLONE_DIR}/
 cp -r odoo-9.0/odoo.py ${CLONE_DIR}/
 rm -rf 9.0.zip
 rm -rf odoo-9.0
