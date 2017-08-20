@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-CLONE_DIR="/home/pi/odoo"
+ROOT_DIR="/home/pi"
+CLONE_DIR="$ROOT_DIR/odoo"
 rm -rf "${CLONE_DIR}"
 
 mkdir -p  "${CLONE_DIR}"
@@ -24,8 +25,8 @@ cp -r odoo-production-9.0/intercoop_addons/hw_* ${CLONE_DIR}/addons
 rm -rf 9.0.zip
 rm -rf odoo-production-9.0
 
-cd /home/pi/
+cd ${ROOT_DIR}
 rm -rf update_posbox.sh
-https://raw.githubusercontent.com/AwesomeFoodCoops/posbox-image/master/overwrite_before_init/home/pi/update_posbox.sh
+wget https://raw.githubusercontent.com/AwesomeFoodCoops/posbox-image/master/overwrite_before_init/home/pi/update_posbox.sh
 
 sudo reboot
