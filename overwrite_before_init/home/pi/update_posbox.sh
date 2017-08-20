@@ -8,6 +8,7 @@ mkdir -p  "${CLONE_DIR}"
 
 wget https://github.com/AwesomeFoodCoops/odoo-production/archive/9.0.zip
 unzip 9.0.zip
+mkdir -p "${CLONE_DIR}/addons/"
 
 cp -r odoo-production-9.0/odoo/addons/web ${CLONE_DIR}/addons/
 cp -r odoo-production-9.0/odoo/addons/web_kanban ${CLONE_DIR}/addons/
