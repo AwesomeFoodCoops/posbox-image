@@ -41,30 +41,28 @@ fi
 
 cp -a *raspbian*.img posbox.img
 
-CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
+PI_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi"
+CLONE_DIR="$PI_DIR/odoo"
 #rm -rf "${CLONE_DIR}"
 if [ ! -d "${CLONE_DIR}" ]; then
 	# Control will enter here if $DIRECTORY doesn't exist.
 	mkdir -p  "${CLONE_DIR}"
-	git clone -b 8.0 --no-checkout --depth 1 https://github.com/odoo/odoo.git "${CLONE_DIR}"
-	cd "${CLONE_DIR}"
-	git config core.sparsecheckout true
-	echo "addons/web
-addons/web_kanban
-addons/hw_*
-addons/point_of_sale/tools/posbox/configuration
-openerp/
-odoo.py" | tee --append .git/info/sparse-checkout > /dev/null
-	git read-tree -mu HEAD
 
-fi
-
-if [ ! -d "${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons/hw_cashlogy" ]; then
-	# Control will enter here if $DIRECTORY doesn't exist.
 	wget https://github.com/AwesomeFoodCoops/odoo-production/archive/9.0.zip
-        unzip 9.0.zip
-	cp -r odoo-production-9.0/extra_addons/hw_cashlogy ${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons
-	cp -r odoo-production-9.0/extra_addons/hw_telium_payment_terminal ${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo/addons
+	unzip 9.0.zip
+	mkdir -p "${CLONE_DIR}/addons/"
+
+	cp -r odoo-production-9.0/odoo/addons/web ${CLONE_DIR}/addons/
+	cp -r odoo-production-9.0/odoo/addons/web_kanban ${CLONE_DIR}/addons/
+	cp -r odoo-production-9.0/odoo/addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-9.0/odoo/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons/
+	cp -r odoo-production-9.0/odoo/openerp ${CLONE_DIR}/
+	cp -r odoo-production-9.0/odoo/odoo.py ${CLONE_DIR}/
+
+	cp -r odoo-production-9.0/extra_addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-9.0/OCA_addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-9.0/louve_addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-9.0/intercoop_addons/hw_* ${CLONE_DIR}/addons/
 	rm -rf 9.0.zip
 	rm -rf odoo-production-9.0
 fi
