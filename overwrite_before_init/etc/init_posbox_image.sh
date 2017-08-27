@@ -13,26 +13,27 @@ export DEBIAN_FRONTEND=noninteractive
 
 mount /dev/sda1 /boot
 
-#echo "================>> Enable root user"
-#echo "================>> TODO after reboot : manually change root and pi paswords !"
+echo "================>> Enable root user"
+echo "================>> TODO after reboot : manually change root and pi paswords !"
 echo "root:rasp" | chpasswd
 
 
-#echo "================>> Update the package list"
-apt-get update
-#echo "================>> Upgrade the system"
-apt-get -y dist-upgrade
+echo "================>> Update the package list"
+apt update
+echo "================>> Upgrade the system"
+apt -y dist-upgrade
 
+echo "================>> Install the needed system packages"
 PKGS_TO_INSTALL="htop w3m adduser postgresql-client python python-unidecode python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
 
-#PKGS_TO_INSTALL="adduser postgresql-client postgresql localepurge iw hostapd isc-dhcp-server console-data"
+apt -y install ${PKGS_TO_INSTALL}
 
-apt-get -y install ${PKGS_TO_INSTALL}
-
-apt-get clean
+apt clean
 localepurge
 rm -rf /usr/share/doc
 
+
+echo "================>> Install the needed python packages"
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
@@ -45,14 +46,16 @@ pip install simplejson
 pip install unittest2
 pip install babel
 
+echo "================>> Enable ssh & postgresql systemctl service"
+systemctl enable ssh
+systemctl enable postgresql
+
 echo "================>> Add system user pi to usbusers system group"
 groupadd usbusers
 usermod -a -G usbusers pi
 usermod -a -G lp pi
 
-
-echo "================>> Create postgres profile for pi system user"
-sudo -u postgres createuser -s pi
+echo "================>> Create log directory"
 mkdir /var/log/odoo
 chown pi:pi /var/log/odoo
 
@@ -66,9 +69,12 @@ chmod 644 /etc/logrotate.conf
 echo "================>> Add cron task to empty the /var/run/odoo/sessions directory"
 echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 
+echo "================>> Remove AP and DHCP automatic conf"
 update-rc.d -f hostapd remove
 update-rc.d -f isc-dhcp-server remove
 
+echo "================>> Reload systemctl service configurations"
+systemctl daemon-reload
 
 #create dirs for ramdisks
 create_ramdisk_dir () {
@@ -81,9 +87,7 @@ create_ramdisk_dir () {
 #create_ramdisk_dir "/tmp"
 #mkdir /root_bypass_ramdisks
 
-
 #echo "================>> Enable ramdisk systemctl service"
-systemctl daemon-reload
 #systemctl enable ramdisks.service
 #systemctl disable dphys-swapfile.service
 
@@ -92,28 +96,35 @@ echo "================>> Enable setupcon"
 # to not have "setting up console font and keymap" during boot take ages
 setupcon
 
-
 echo "================>> Install Apache2"
-apt-get -y install apache2
+apt -y install apache2
 
 echo "================>> Generate selfsigned certificate"
 mkdir /etc/apache2/ssl
 cd /etc/apache2/ssl
-
 openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=FR/ST=Denial/L=Paris/O=Dis/CN=posbox"  -keyout posbox.key  -out posbox.cert
 
-
-echo "================>> Enable Odoo vhost"
+echo "================>> Enable Apache Modules"
 a2enmod ssl
 a2enmod rewrite
 a2enmod proxy_http
 a2enmod headers
 
+echo "================>> Enable Odoo vhost"
 a2ensite odoo
 a2dissite 000-default.conf
-service apache2 restart
+
+echo "================>> Reload Apache2 Configuration"
+systemctl reload apache2
 
 chown -R pi:pi /home/pi
 touch /boot/ssh
+
+echo "================>> Start postgresql service"
+systemctl start postgresql
+
+echo "================>> Create postgres profile for pi system user"
+sudo -u postgres createuser -s pi
+
 echo "================>> end"
 #halt
