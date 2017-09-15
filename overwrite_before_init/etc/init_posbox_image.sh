@@ -45,6 +45,7 @@ pip install evdev
 pip install simplejson
 pip install unittest2
 pip install babel
+pip install git+https://github.com/Ousret/pyTeliumManager.git@python-2.7 
 
 echo "================>> Enable ssh & postgresql systemctl service"
 systemctl enable ssh
