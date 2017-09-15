@@ -55,7 +55,8 @@ if [ ! -d "${CLONE_DIR}" ]; then
 	cp -r odoo-production-9.0/odoo/addons/web ${CLONE_DIR}/addons/
 	cp -r odoo-production-9.0/odoo/addons/web_kanban ${CLONE_DIR}/addons/
 	cp -r odoo-production-9.0/odoo/addons/hw_* ${CLONE_DIR}/addons/
-	cp -r odoo-production-9.0/odoo/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons/
+        mkdir -p ${CLONE_DIR}/addons/point_of_sale/tools/posbox/
+        cp -r odoo-production-9.0/odoo/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons/point_of_sale/tools/posbox/
 	cp -r odoo-production-9.0/odoo/openerp ${CLONE_DIR}/
 	cp -r odoo-production-9.0/odoo/odoo.py ${CLONE_DIR}/
 
