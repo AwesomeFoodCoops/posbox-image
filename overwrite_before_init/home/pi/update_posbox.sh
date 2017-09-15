@@ -13,7 +13,8 @@ mkdir -p "${CLONE_DIR}/addons/"
 cp -r odoo-production-9.0/odoo/addons/web ${CLONE_DIR}/addons/
 cp -r odoo-production-9.0/odoo/addons/web_kanban ${CLONE_DIR}/addons/
 cp -r odoo-production-9.0/odoo/addons/hw_* ${CLONE_DIR}/addons/
-cp -r odoo-production-9.0/odoo/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons/
+mkdir -p ${CLONE_DIR}/addons/point_of_sale/tools/posbox/
+cp -r odoo-production-9.0/odoo/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons/point_of_sale/tools/posbox/
 cp -r odoo-production-9.0/odoo/openerp ${CLONE_DIR}/
 cp -r odoo-production-9.0/odoo/odoo.py ${CLONE_DIR}/
 
@@ -27,5 +28,6 @@ rm -rf odoo-production-9.0
 cd ${PI_DIR}
 rm -rf update_posbox.sh
 wget https://raw.githubusercontent.com/AwesomeFoodCoops/posbox-image/master/overwrite_before_init/home/pi/update_posbox.sh
+chmod +x update_posbox.sh
 
 sudo reboot
