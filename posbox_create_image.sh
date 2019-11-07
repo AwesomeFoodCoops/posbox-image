@@ -132,9 +132,8 @@ umount "${MOUNT_POINT}"
 
 # from http://paulscott.co.za/blog/full-raspberry-pi-raspbian-emulation-with-qemu/
 # ssh pi@localhost -p10022
-#ORIGINAL OPTIONS
-#QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069,hostfwd=tcp::10443-:443,hostfwd=tcp::10080-:80 -net nic)
-QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 panic=1 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069,hostfwd=tcp::10443-:443,hostfwd=tcp::10080-:80 -net nic)
+# as of stretch with newer kernels, the versatile-pb.dtb file is necessary
+QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -dtb versatile-pb.dtb -nodefaults -no-reboot -serial stdio -append 'root=/dev/sda2 panic=1 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069,hostfwd=tcp::10443-:443,hostfwd=tcp::10080-:80 -net nic)
 
 if [ -z ${DISPLAY:-} ] ; then
     QEMU_OPTS+=(-nographic)
@@ -143,7 +142,10 @@ fi
 echo "Booting qemu.."
 qemu-system-arm "${QEMU_OPTS[@]}"
 
+echo "Mounting drive.."
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
+
+echo "Copying overwrite after init.."
 cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
 # ADDONS CONFIG
@@ -151,15 +153,17 @@ cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 if [ -z "$ADDONS" ]; then
 	echo "Using default addons"
 else
+	echo "Patching rc.local with custom addons"
 	sed -i -E "s/--load=(.*)/--load=$ADDONS" "${MOUNT_POINT}/etc/rc.local"
 fi
 
 # cleanup
+echo "Cleanup"
 sleep 2
 umount "${MOUNT_POINT}"
 rm -r "${MOUNT_POINT}"
 
-#echo "Running zerofree..."
+echo "Running zerofree..."
 zerofree -v "${LOOP_MAPPER_PATH}" || true
 
 kpartx -d posbox.img
