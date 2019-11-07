@@ -9,6 +9,15 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Arguments
+# Usage: sudo ./posbox_create_image.sh <branch> <addons>
+REPOSITORY="https://github.com/AwesomeFoodCoops/odoo-production"
+BRANCH=${1-9.0}
+
+if [ $# -ge 2 ]; then
+	ADDONS=$2
+fi
+
 file_exists() {
     [[ -f $1 ]];
 }
@@ -48,24 +57,24 @@ if [ ! -d "${CLONE_DIR}" ]; then
 	# Control will enter here if $DIRECTORY doesn't exist.
 	mkdir -p  "${CLONE_DIR}"
 
-	wget https://github.com/AwesomeFoodCoops/odoo-production/archive/9.0.zip
-	unzip 9.0.zip
+	wget ${REPOSITORY}/archive/${BRANCH}.zip -O posbox.zip
+	unzip posbox.zip
 	mkdir -p "${CLONE_DIR}/addons/"
 
-	cp -r odoo-production-9.0/odoo/addons/web ${CLONE_DIR}/addons/
-	cp -r odoo-production-9.0/odoo/addons/web_kanban ${CLONE_DIR}/addons/
-	cp -r odoo-production-9.0/odoo/addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-$BRANCH/odoo/addons/web ${CLONE_DIR}/addons/
+	cp -r odoo-production-$BRANCH/odoo/addons/web_kanban ${CLONE_DIR}/addons/
+	cp -r odoo-production-$BRANCH/odoo/addons/hw_* ${CLONE_DIR}/addons/
         mkdir -p ${CLONE_DIR}/addons/point_of_sale/tools/posbox/
-        cp -r odoo-production-9.0/odoo/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons/point_of_sale/tools/posbox/
-	cp -r odoo-production-9.0/odoo/openerp ${CLONE_DIR}/
-	cp -r odoo-production-9.0/odoo/odoo.py ${CLONE_DIR}/
+        cp -r odoo-production-$BRANCH/odoo/addons/point_of_sale/tools/posbox/configuration ${CLONE_DIR}/addons/point_of_sale/tools/posbox/
+	cp -r odoo-production-$BRANCH/odoo/openerp ${CLONE_DIR}/
+	cp -r odoo-production-$BRANCH/odoo/odoo.py ${CLONE_DIR}/
 
-	cp -r odoo-production-9.0/extra_addons/hw_* ${CLONE_DIR}/addons/
-	cp -r odoo-production-9.0/OCA_addons/hw_* ${CLONE_DIR}/addons/
-	cp -r odoo-production-9.0/louve_addons/hw_* ${CLONE_DIR}/addons/
-	cp -r odoo-production-9.0/intercoop_addons/hw_* ${CLONE_DIR}/addons/
-	rm -rf 9.0.zip
-	rm -rf odoo-production-9.0
+	cp -r odoo-production-$BRANCH/extra_addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-$BRANCH/OCA_addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-$BRANCH/louve_addons/hw_* ${CLONE_DIR}/addons/
+	cp -r odoo-production-$BRANCH/intercoop_addons/hw_* ${CLONE_DIR}/addons/
+	rm -rf posbox.zip
+	rm -rf odoo-production-$BRANCH
 fi
 
 cd "${__dir}"
@@ -126,13 +135,24 @@ umount "${MOUNT_POINT}"
 #ORIGINAL OPTIONS
 #QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069,hostfwd=tcp::10443-:443,hostfwd=tcp::10080-:80 -net nic)
 QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 panic=1 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069,hostfwd=tcp::10443-:443,hostfwd=tcp::10080-:80 -net nic)
+
 if [ -z ${DISPLAY:-} ] ; then
     QEMU_OPTS+=(-nographic)
 fi
+
+echo "Booting qemu.."
 qemu-system-arm "${QEMU_OPTS[@]}"
 
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
+
+# ADDONS CONFIG
+# Replace --load=default,values for custom addons
+if [ -z "$ADDONS" ]; then
+	echo "Using default addons"
+else
+	sed -i -E "s/--load=(.*)/--load=$ADDONS" "${MOUNT_POINT}/etc/rc.local"
+fi
 
 # cleanup
 sleep 2
